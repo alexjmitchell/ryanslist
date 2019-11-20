@@ -29,21 +29,31 @@ router.get("/single/:postId", (req, res, next) => {
 })
 
 router.post("/", (req, res, next) => {
-  const catId = req.body.catId
+  const slug = req.body.slug
   const name = req.body.name
   const post = req.body.post
+  const url = req.body.url
+  console.log(req.body)
 
-  const sql = `
-  INSERT INTO posts (name, post, category_id)
-  VALUES (?,?,?)
+  const getsql = `
+  SELECT id FROM categories WHERE slug = ?
   `
 
-  db.query(sql, [name, post, catId], (err, results, fields) => {
-    if (err) {
-      throw new Error("WHOOPS")
-    } else {
-      res.json(results)
-    }
+  const sql = `
+  INSERT INTO posts (name, post, category_id, image_url)
+  VALUES (?,?,?,?)
+  `
+
+  db.query(getsql, [slug], (err, results, fields) => {
+    const catId = results[0].id
+
+    db.query(sql, [name, post, catId, url], (err, results, fields) => {
+      if (err) {
+        throw new Error("WHOOPS")
+      } else {
+        res.json(results)
+      }
+    })
   })
 })
 

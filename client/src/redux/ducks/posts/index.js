@@ -34,14 +34,30 @@ const getPosts = slug => {
 
 const getSinglePost = postId => {
   return dispatch => {
-    axios.get("/post/" + postId).then(response => {
+    axios.get("/posts/single/" + postId).then(response => {
       dispatch({
         type: GET_SINGLE_POST,
-        payload: response.data
+        payload: response.data[0]
       })
     })
   }
 }
+
+// const createPost = () => {
+//   const create = (slug, name, post) => {
+//     return new Promise((resolve, reject) => {
+//       axios
+//         .post("/", { slug, name, post })
+//         .then(response => {
+//           resolve()
+//         })
+//         .catch(event => {
+//           reject()
+//         })
+//     })
+//   }
+//   return create
+// }
 
 export const usePosts = slug => {
   const posts = useSelector(appState => appState.postState.posts)
@@ -63,4 +79,21 @@ export const usePost = postId => {
   }, [dispatch, postId])
 
   return post
+}
+
+export const useCreatePost = () => {
+  const create = (slug, name, post, url) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post("/posts", { slug, name, post, url })
+        .then(response => {
+          resolve()
+        })
+        .catch(event => {
+          reject()
+        })
+    })
+  }
+
+  return create
 }
