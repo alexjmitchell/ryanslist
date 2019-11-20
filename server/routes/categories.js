@@ -15,7 +15,6 @@ router.get("/", (request, response, next) => {
     })
 
     response.json(filtered)
-    console.log(filtered)
   })
 })
 
